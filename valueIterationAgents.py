@@ -38,14 +38,22 @@ class ValueIterationAgent(ValueEstimationAgent):
               mdp.getReward(state, action, nextState)
               mdp.isTerminal(state)
         """
+
         self.mdp = mdp
         self.discount = discount
         self.iterations = iterations
         self.values = util.Counter() # A Counter is a dict with default 0
 
         # Write value iteration code here
-        "*** YOUR CODE HERE ***"
-
+        while self.iterations > 0:
+            valuesCopy = self.values.copy()
+            for state in self.mdp.getStates():
+                possActions = self.mdp.getPossibleActions(state)
+                if len(possActions) >= 1:
+                    actionQValues = [self.computeQValueFromValues(state, possAction) for possAction in possActions]
+                    valuesCopy[state] = max(actionQValues)
+            self.values = valuesCopy
+            self.iterations -= 1
 
     def getValue(self, state):
         """
@@ -59,8 +67,9 @@ class ValueIterationAgent(ValueEstimationAgent):
           Compute the Q-value of action in state from the
           value function stored in self.values.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        qVals = [prob * (self.mdp.getReward(state,action,tranState) + self.discount * self.values[tranState]) for tranState,prob in self.mdp.getTransitionStatesAndProbs(state, action)]
+        return sum(qVals)
 
     def computeActionFromValues(self, state):
         """
@@ -71,8 +80,13 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        if self.mdp.isTerminal(state):
+            return None
+        actionCounter = util.Counter()
+        for action in self.mdp.getPossibleActions(state):
+            actionCounter[action] = self.computeQValueFromValues(state,action)
+        return actionCounter.argMax()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
