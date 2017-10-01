@@ -32,9 +32,9 @@ def question3a():
     # If not possible, return 'NOT POSSIBLE'
 
 def question3b():
-    answerDiscount = 0.1
-    answerNoise = 0.0
-    answerLivingReward = 0.0
+    answerDiscount = 0.6
+    answerNoise = 0.4
+    answerLivingReward = -0.7
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
@@ -47,7 +47,7 @@ def question3c():
 
 def question3d():
     answerDiscount = 0.9
-    answerNoise = 0.0
+    answerNoise = 0.4
     answerLivingReward = 0.0
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
