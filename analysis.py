@@ -33,7 +33,7 @@ def question3a():
 
 def question3b():
     answerDiscount = 0.6
-    answerNoise = 0.4
+    answerNoise = 0.4   
     answerLivingReward = -0.7
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
@@ -47,23 +47,24 @@ def question3c():
 
 def question3d():
     answerDiscount = 0.9
-    answerNoise = 0.4
+    answerNoise = 0.4   # high noise, will take longer route.
     answerLivingReward = 0.0
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
 def question3e():
     answerDiscount = 0
-    answerNoise = 0.9
-    answerLivingReward = 0
+    answerNoise = 0.5
+    answerLivingReward = 100
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
 def question6():
     answerEpsilon = None
     answerLearningRate = None
-    return answerEpsilon, answerLearningRate
-    # If not possible, return 'NOT POSSIBLE'
+    #return answerEpsilon, answerLearningRate
+    # If not possible, 
+    return 'NOT POSSIBLE'
 
 if __name__ == '__main__':
     print 'Answers to analysis questions:'
