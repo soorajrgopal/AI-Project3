@@ -49,8 +49,6 @@ class QLearningAgent(ReinforcementAgent):
           Should return 0.0 if we have never seen a state
           or the Q node value otherwise
         """
-        if (state,action) not in self.qValues.keys():
-            return 0.0
         return self.qValues[(state,action)]
 
     def computeValueFromQValues(self, state):
@@ -60,11 +58,9 @@ class QLearningAgent(ReinforcementAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return a value of 0.0.
         """
-        if len(self.getLegalActions(state)) == 0:
+        if not self.getLegalActions(state):
             return 0.0
-        else:
-            qVals = [self.getQValue(state, action) for action in self.getLegalActions(state)]
-            return max(qVals)
+        return max([self.getQValue(state, action) for action in self.getLegalActions(state)])
 
     def computeActionFromQValues(self, state):
         """
@@ -72,18 +68,15 @@ class QLearningAgent(ReinforcementAgent):
           are no legal actions, which is the case at the terminal state,
           you should return None.
         """
-        actionCounter,qVals = util.Counter(),[]
+        actionDict = {}
         if len(self.getLegalActions(state)) == 0:
             return None
         else:
             for action in self.getLegalActions(state):
-                actionCounter[action] = self.getQValue(state, action)
-                qVals.append(self.getQValue(state, action))
-            maxActions = [action for action in actionCounter if actionCounter[action] == max(qVals)]
-            if len(maxActions) == 1:
-                return maxActions[0]
-            else:
-                return random.choice(maxActions)
+                actionDict[action] = self.getQValue(state, action)
+            maxVal = max(actionDict.values())
+            maxActions = [action for action in actionDict.keys() if actionDict[action] == maxVal]
+            return random.choice(maxActions)
 
     def getAction(self, state):
         """
@@ -98,22 +91,11 @@ class QLearningAgent(ReinforcementAgent):
         """
         # Pick Action
         legalActions = self.getLegalActions(state)
-        action = None
-        actionCounter,qVals = util.Counter(),[]
-        if len(legalActions) == 0:
+        if not legalActions:
             return None
         elif util.flipCoin(self.epsilon):
-                action = random.choice(legalActions)
-        else:
-            for action in self.getLegalActions(state):
-                actionCounter[action] = self.getQValue(state, action)
-                qVals.append(self.getQValue(state, action))
-            maxActions = [action for action in actionCounter if actionCounter[action] == max(qVals)]
-            if len(maxActions) == 1:
-                action = maxActions[0]
-            else:
-                action = random.choice(maxActions)
-        return action
+            return random.choice(legalActions)
+        return self.getPolicy(state)
 
     def update(self, state, action, nextState, reward):
         """
