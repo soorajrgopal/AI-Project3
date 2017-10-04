@@ -74,9 +74,7 @@ class QLearningAgent(ReinforcementAgent):
         else:
             for action in self.getLegalActions(state):
                 actionDict[action] = self.getQValue(state, action)
-            maxVal = max(actionDict.values())
-            maxActions = [action for action in actionDict.keys() if actionDict[action] == maxVal]
-            return random.choice(maxActions)
+            return max(actionDict, key=actionDict.get)
 
     def getAction(self, state):
         """
@@ -170,16 +168,26 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        product = 0
+        weight=self.getWeights()
+        feature = self.featExtractor.getFeatures(state, action)
+        for f in feature:
+            product+=(feature[f]*weight[f])
+        return product
+        
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        feature = self.featExtractor.getFeatures(state, action)
+        weight=self.getWeights()
+        diff=reward + self.discount*self.getValue(nextState)-self.getQValue(state,action)
+        
+        for f in feature:
+            weight[f]+=self.alpha*diff*feature[f]
+    
+    
     def final(self, state):
         "Called at the end of each game."
         # call the super-class final method
